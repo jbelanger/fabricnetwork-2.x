@@ -31,13 +31,50 @@ setGlobalsForPeer0Org3(){
 }
 
 createChannel(){
-    rm -rf ./channel-artifacts/*
+    # First ensure channel-artifacts exists with correct permissions
+    sudo rm -rf ./channel-artifacts
+    mkdir -p ./channel-artifacts
+    sudo chown -R $USER:$USER ./channel-artifacts
+    sudo chmod -R 755 ./channel-artifacts
+    
     setGlobalsForPeer0Org1
     
-    peer channel create -o localhost:7050 -c $CHANNEL_NAME \
-    --ordererTLSHostnameOverride orderer.example.com \
-    -f ./artifacts/channel/${CHANNEL_NAME}.tx --outputBlock ./channel-artifacts/${CHANNEL_NAME}.block \
-    --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+    # Add a longer delay to ensure orderer is fully ready
+    echo "Waiting for orderer to start...."
+    sleep 15
+    
+    # Add retry logic for channel creation
+    MAX_RETRY=5
+    DELAY=10
+    COUNTER=1
+    
+    while [ $COUNTER -le $MAX_RETRY ]; do
+        echo "Attempting to create channel (attempt $COUNTER of $MAX_RETRY)"
+        
+        peer channel create -o localhost:7050 -c $CHANNEL_NAME \
+        --ordererTLSHostnameOverride orderer.example.com \
+        -f ./artifacts/channel/mychannel.tx \
+        --outputBlock ./channel-artifacts/${CHANNEL_NAME}.block \
+        --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+        
+        if [ $? -eq 0 ]; then
+            echo "Channel created successfully"
+            break
+        fi
+        
+        COUNTER=$((COUNTER + 1))
+        echo "Channel creation failed. Waiting $DELAY seconds before retry"
+        sleep $DELAY
+    done
+    
+    if [ $COUNTER -gt $MAX_RETRY ]; then
+        echo "Channel creation failed after $MAX_RETRY attempts"
+        exit 1
+    fi
+    
+    # Ensure the created block file has correct permissions
+    sudo chown -R $USER:$USER ./channel-artifacts/${CHANNEL_NAME}.block
+    sudo chmod 755 ./channel-artifacts/${CHANNEL_NAME}.block
 }
 
 removeOldCrypto(){
