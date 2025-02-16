@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 
 networks:
   test:
@@ -6,7 +6,7 @@ networks:
 services:
 
   ca_org1:
-    image: hyperledger/fabric-ca:1.5.6
+    image: hyperledger/fabric-ca:1.5.7
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.org1.example.com
@@ -24,7 +24,7 @@ services:
       - test
 
   ca_org2:
-    image: hyperledger/fabric-ca:1.5.6
+    image: hyperledger/fabric-ca:1.5.7
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.org2.example.com
@@ -42,7 +42,7 @@ services:
       - test
 
   ca_org3:
-    image: hyperledger/fabric-ca:1.5.6
+    image: hyperledger/fabric-ca:1.5.7
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.org3.example.com
@@ -60,7 +60,7 @@ services:
       - test
 
   ca_orderer:
-    image: hyperledger/fabric-ca:1.5.6
+    image: hyperledger/fabric-ca:1.5.7
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-orderer

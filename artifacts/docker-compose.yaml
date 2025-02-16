@@ -6,7 +6,7 @@ networks:
 services:
   orderer.example.com:
     container_name: orderer.example.com
-    image: hyperledger/fabric-orderer:2.2.2
+    image: hyperledger/fabric-orderer:2.5.11
     dns_search: .
     environment:
       - ORDERER_GENERAL_LOGLEVEL=info
@@ -38,21 +38,21 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/genesis.block:/var/hyperledger/orderer/genesis.block
+      - ../channel-artifacts:/var/hyperledger/orderer
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/var/hyperledger/orderer/tls
       # - /var/pavan/orderer:/var/hyperledger/production
 
   orderer2.example.com:
     container_name: orderer2.example.com
-    image: hyperledger/fabric-orderer:2.2.2
+    image: hyperledger/fabric-orderer:2.5.11
     dns_search: .
     environment:
       - ORDERER_GENERAL_LOGLEVEL=info
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -77,21 +77,21 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../channel-artifacts:/var/hyperledger/orderer
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls:/var/hyperledger/orderer/tls
       # - /var/pavan/orderer2:/var/hyperledger/production
 
   orderer3.example.com:
     container_name: orderer3.example.com
-    image: hyperledger/fabric-orderer:2.2.2
+    image: hyperledger/fabric-orderer:2.5.11
     dns_search: .
     environment:
       - ORDERER_GENERAL_LOGLEVEL=info
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -116,14 +116,14 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../channel-artifacts:/var/hyperledger/orderer
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls:/var/hyperledger/orderer/tls
       # - /var/pavan/orderer3:/var/hyperledger/production
 
   couchdb0:
     container_name: couchdb0
-    image: couchdb:3.1.1
+    image: couchdb:3.3.2
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=adminpw
@@ -134,7 +134,7 @@ services:
 
   couchdb1:
     container_name: couchdb1
-    image: couchdb:3.1.1
+    image: couchdb:3.3.2
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=adminpw
@@ -145,7 +145,7 @@ services:
 
   couchdb2:
     container_name: couchdb2
-    image: couchdb:3.1.1
+    image: couchdb:3.3.2
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=adminpw
