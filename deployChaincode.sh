@@ -35,11 +35,21 @@ setGlobalsForPeer0Org3() {
 }
 
 presetup() {
-    echo Vendoring Go dependencies ...
+    echo "Vendoring Go dependencies..."
     pushd ./artifacts/src/github.com/fabcar/go
-    GO111MODULE=on go mod vendor
+    
+    # Update go.mod and download dependencies
+    go mod tidy
+    go get github.com/hyperledger/fabric-chaincode-go/pkg/cid
+    go get github.com/hyperledger/fabric-contract-api-go/contractapi
+    go mod tidy
+    
+    # Vendor dependencies
+    rm -rf vendor
+    go mod vendor
+    
     popd
-    echo Finished vendoring Go dependencies
+    echo "Finished vendoring Go dependencies"
 }
 
 CHANNEL_NAME="mychannel"
